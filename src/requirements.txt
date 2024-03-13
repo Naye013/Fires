@@ -1,0 +1,8 @@
+dash==2.15.0
+pandas
+altair
+plotly
+dash_vega_components
+dash_bootstrap_components
+vegafusion[embed]>=1.4.0
+gunicorn

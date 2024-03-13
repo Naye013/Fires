@@ -1,0 +1,194 @@
+/* CSS for heading */
+.count {
+font-size: 24px;
+padding: 20px;
+background-color: #000000;
+border-radius: 10px;
+/*box-shadow: 5px 5px 5px grey;*/
+color : white;
+}
+
+.heading {
+    background-color: #000000;
+    padding: 10px;
+    left: 0;
+    color: white;
+    font-size: 35px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* CSS for heading text */
+.heading-text {
+    text-align: center;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+/* CSS for main content area */
+.content {
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 18%;
+    top: 200px;
+    overflow-y: auto;
+}
+
+/* CSS for filter labels */
+.filter-label {
+    font-weight: bold;
+    padding: 10px;
+    font-size: 20px;
+    color: white;
+}
+
+.count-label {
+    font-weight: bold;
+    padding: 10px;
+    font-size: 20px;
+    text-align :center;
+    color: white;
+}
+
+/* CSS for slider output */
+.slider-output {
+    padding: 10px;
+    color: white;
+}
+
+/* CSS for sidebar */
+.sidebar {
+    background-color: #000000;
+    padding: 5px;
+    width: 15%;
+    height: 100%;
+    position: fixed;
+    left: 1;
+    top: 150px;
+    overflow-y: auto;
+}
+
+/* CSS for sub-heading */
+.sub-heading {
+    font-weight: bold;
+    padding: 10px;
+    font-size: 20px;
+}
+
+/* CSS for fire size information */
+.fire-size-info {
+    max-height: 150px;
+    overflow-y: auto;
+    color: white;
+}
+
+.shadow-style {
+    /*box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);*/
+    border-radius: 4px;
+}
+
+/* Define a medium-sized column with 8 out of 12 available columns */
+.col-8 {
+    flex: 0 0 66.66667%;
+    max-width: 66.66667%;
+}
+
+/* CSS for button-like link */
+.button-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #000000; /* Black color */
+    color: #ffffff; /* White color */
+    text-decoration: none;
+    border: none;
+	margin-left: 300px;
+    border-radius: 0.25rem;
+	font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transition for background color and text color */
+}
+
+.button-link:hover {
+    background-color: #6c757d; /* Grey color on hover */
+    font-weight: bold; /* Make text bold on hover */
+}
+.mapStyle {
+height: 45%;
+width: 60%;
+margin-left: 18%;
+border-radius: 10px;
+/*box-shadow: 5px 5px 5px 5px grey;*/
+}
+
+.countLabel{
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+margin-bottom: 20px;
+}
+
+.Container{
+display: grid
+flex: 1;
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+}
+
+.chart_1{
+height: 45%;
+width: 50%;
+margin-left: 18%;
+margin-top: 1%;
+}
+.chart_2{
+height: 45%;
+width: 50%;
+margin-left: 1%;
+margin-top: 1%;
+}
+
+.layoutbackground{
+background-color: #151515
+}
+
+
+.altair-chart-1 {
+    height: 45%;
+    width: 50%;
+    margin-left: 20%;
+    margin-top: 2%;
+}
+
+.altair-chart-2 {
+    height: 45%;
+    width: 50%;
+    margin-left: 23%;
+    margin-top: 2%;
+}
+
+.altair-chart-3 {
+    height: 45%;
+    width: 50%;
+    margin-left: -20%;
+    margin-top: 2%;
+}
+
+.altair-chart-4 {
+    height: 45%;
+    width: 50%;
+    margin-left: -20%;
+    margin-top: 2%;
+}
+
+.paragraph-text {
+    font-family: "Arial", sans-serif;
+    text-align: left;
+    font-size: 10px;
+    color: white;
+    margin-left: 17%;
+    margin-bottom: 1%;
+    background-color':'black';
+}
