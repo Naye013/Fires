@@ -1,8 +1,8 @@
-dash==2.15.0
+dash
 pandas
-altair
+altair==5.2.0
 plotly
-dash_vega_components
-dash_bootstrap_components
-vegafusion[embed]>=1.4.0
+dash_vega_components==0.8.2
+dash_bootstrap_components==1.5.8
+vegafusion[embed]==1.6.5
 gunicorn
