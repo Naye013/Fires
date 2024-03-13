@@ -1,5 +1,5 @@
 dash==2.15.0
-pandas=2.2.1
+pandas==2.2.1
 altair==5.2.0
 plotly==5.19.0
 dash_vega_components==0.8.2
