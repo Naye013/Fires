@@ -9,7 +9,7 @@ import dash_vega_components as dvc
 alt.data_transformers.enable("vegafusion")
 dash.register_page(__name__, path='/showSecondPage.py', name="Causes of WildFire")
 # Load data
-df = pd.read_csv("https://raw.githubusercontent.com/Naye013/Fires/main/data/processed/output.csv", low_memory=False)
+df = pd.read_csv("https://raw.githubusercontent.com/andrewsarracini/DATA551_FireAnalysis/main/data/processed/output.csv", low_memory=False)
 
 ## -- Plot 1: altair-chart-1 --
 def create_altair_chart(data):
@@ -186,7 +186,6 @@ layout = html.Div([
                 html.P('G = 5000+ acres (extreme)')
             ], className='fire-size-info')
         ]),
-            #html.Button("SELECT ALL", id="select-all", n_clicks=0, style={'margin-top': '10px'}),
             html.Br()
         ], width=3, className="sidebar"),  # End of Filters sidebar
         html.Br(),
@@ -196,7 +195,6 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-1",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart(df),
                 className="altair-chart-1"  # Adding class name
             ),
             html.Br(),
@@ -204,7 +202,6 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-2",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart2(df),
                 className="altair-chart-2"
             ),
         ], width=3),  # End of first column
@@ -214,7 +211,6 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-3",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart3(df),
                 className="altair-chart-3"
             ),
             html.Br(),
@@ -222,7 +218,6 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-4",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart4(df),
                 className="altair-chart-4"
             ),
         ],width=5)  # End of second column
@@ -245,8 +240,8 @@ layout = html.Div([
 )
 
 def update_altair_chart(year_range, selected_states, selected_sizes):
-    dff = df.copy()
-
+    # Selecting just the desire columns to optimize the code
+    dff = df[['FIRE_YEAR', 'STAT_CAUSE_DESCR', 'FIRE_SIZE', 'FIRE_SIZE_CLASS', 'state_descriptions','geographic_areas_desc', 'CAUSES', 'MONTH']]
     dff = dff[(dff['FIRE_YEAR'] >= year_range[0]) & (dff['FIRE_YEAR'] <= year_range[1])]
 
     if 'All' not in selected_states:
