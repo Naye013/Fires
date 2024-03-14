@@ -9,7 +9,7 @@ import dash_vega_components as dvc
 alt.data_transformers.enable("vegafusion")
 dash.register_page(__name__, path='/showSecondPage.py', name="Causes of WildFire")
 # Load data
-df = pd.read_csv("https://raw.githubusercontent.com/Naye013/Fires/main/data/processed/output.csv", low_memory=False)
+df = pd.read_csv("https://raw.githubusercontent.com/andrewsarracini/DATA551_FireAnalysis/main/data/processed/output.csv", low_memory=False)
 
 ## -- Plot 1: altair-chart-1 --
 def create_altair_chart(data):
@@ -41,11 +41,11 @@ def create_altair_chart(data):
 color_scale = alt.Scale(domain=['Human','Lightning'], range=['#9D0400', '#FF9900'])
 def create_altair_chart2(data):
     title2 = alt.TitleParams(
-        text='Regional Fire Patterns: Proportion of Fires',
+        text='Regional Fire Patterns: Number of Fires',
         color='white', fontSize=16)
 
     chart2 = alt.Chart(data[data['CAUSES'].isin(['Human', 'Lightning'])], title=title2).mark_bar().encode(
-        alt.X('count(CAUSES)', stack='normalize', title='', axis=alt.Axis(labelColor='white')),
+        alt.X('count(CAUSES)', title='', axis=alt.Axis(labelColor='white', format='~s')),
         alt.Y('geographic_areas_desc:O', sort='y', title="", axis=alt.Axis(labelColor='white')),
         alt.Color('CAUSES', title="", scale=color_scale, legend=alt.Legend(orient='none',
             legendX=90, legendY=-20,
@@ -98,10 +98,10 @@ def create_altair_chart3(data):
 #causes_grouped2 = df[df['CAUSES'].isin(['Human', 'Lightning'])].groupby(['FIRE_YEAR', 'FIRE_SIZE_CLASS','state_descriptions', 'geographic_areas_desc', 'CAUSES'])['FIRE_SIZE'].sum().reset_index(name='SUM')
 def create_altair_chart4(data):
     title4 = alt.TitleParams(
-        text='Regional Fire Patterns: Proportion of Acres Burned',
+        text='Regional Fire Patterns: Total Acres Burned',
         color='white', fontSize=16)
     chart4 = alt.Chart(data[data['CAUSES'].isin(['Human', 'Lightning'])], title=title4).mark_bar().encode(
-        alt.X('sum(FIRE_SIZE)', stack='normalize', title='', axis=alt.Axis(labelColor='white')),
+        alt.X('sum(FIRE_SIZE)', title='', axis=alt.Axis(labelColor='white', format='~s')),
         alt.Y('geographic_areas_desc:O', sort='y', title="", axis=alt.Axis(labelColor='white')),
         alt.Color('CAUSES', title="", scale=color_scale, legend=alt.Legend(orient='none',
             legendX=90, legendY=-20,
@@ -202,7 +202,7 @@ layout = html.Div([
             html.Br(),
             html.Br(),
             dvc.Vega(
-                id="altair-chart-3",
+                id="altair-chart-2",
                 opt={"renderer": "svg", "actions": False},
                 spec=create_altair_chart2(df),
                 className="altair-chart-2"
@@ -212,7 +212,7 @@ layout = html.Div([
         dbc.Col([
             html.Br(),
             dvc.Vega(
-                id="altair-chart-2",
+                id="altair-chart-3",
                 opt={"renderer": "svg", "actions": False},
                 spec=create_altair_chart3(df),
                 className="altair-chart-3"
