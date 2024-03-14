@@ -74,7 +74,7 @@ def create_altair_chart3(data):
                 color='white', fontSize=16)
     chart3_1 = alt.Chart(data[data['CAUSES'].isin(['Human', 'Lightning'])], title=title3).mark_line().encode(
     alt.X('MONTH:O', title=None, sort=sort_order, axis=alt.Axis(labelAngle=0, labelColor='white')),
-    alt.Y('count(MONTH)', title=None, axis=alt.Axis(labelColor='white')),
+    alt.Y('count(MONTH)', title=None, axis=alt.Axis(labelColor='white', format='~s')),
     alt.Color('CAUSES:O', title= '', scale=color_scale, legend=alt.Legend(orient='none',
     legendX=120, legendY=-20, direction='horizontal', titleAnchor='middle', titleColor='white',
     labelColor='white'))
