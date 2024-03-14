@@ -9,7 +9,7 @@ import dash_vega_components as dvc
 alt.data_transformers.enable("vegafusion")
 dash.register_page(__name__, path='/showSecondPage.py', name="Causes of WildFire")
 # Load data
-df = pd.read_csv("https://raw.githubusercontent.com/andrewsarracini/DATA551_FireAnalysis/main/data/processed/output.csv", low_memory=False)
+df = pd.read_csv("https://raw.githubusercontent.com/Naye013/Fires/main/data/processed/output.csv", low_memory=False)
 
 ## -- Plot 1: altair-chart-1 --
 def create_altair_chart(data):
