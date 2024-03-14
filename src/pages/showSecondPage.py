@@ -12,15 +12,14 @@ dash.register_page(__name__, path='/showSecondPage.py', name="Causes of WildFire
 df = pd.read_csv("https://raw.githubusercontent.com/Naye013/Fires/main/data/processed/output.csv", low_memory=False)
 
 ## -- Plot 1: altair-chart-1 --
-wildfires_causes = df.groupby(['FIRE_YEAR', 'state_descriptions', 'FIRE_SIZE_CLASS', 'STAT_CAUSE_DESCR']).size().reset_index(name='COUNT')
-fireSize = sorted([{'label': size, 'value': size} for size in df['FIRE_SIZE_CLASS'].unique()], key=lambda x: x['label'])
-
-# Personalized scales from yellow to red
-color_scale1 = alt.Scale(range=['#ffff00', '#ffd700', '#ffa500', '#d0320b', '#ff0000', '#8b0000', '#8b0000'])
 def create_altair_chart(data):
+    # Personalized scales from yellow to red
+    color_scale1 = alt.Scale(range=['#ffff00', '#ffd700', '#ffa500', '#d0320b', '#ff0000', '#8b0000', '#8b0000'])
+
     title = alt.TitleParams(
     text='Understanding Wildfires: Causes and Fire Size',
     color='white', fontSize=16)
+
     chart = alt.Chart(data, title=title).mark_square().encode(
         alt.X('FIRE_SIZE_CLASS:N', title=None, axis=alt.Axis(labelAngle=0, ticks=False, labelColor='white')),
         alt.Y('STAT_CAUSE_DESCR:N', title=None, sort='color', axis=alt.Axis(ticks=False, labels=True, labelColor='white')),
@@ -38,15 +37,15 @@ def create_altair_chart(data):
     return chart.to_dict(format="vega")
 
 ## -- Plot 2: "altair-chart-2" --
-color_scale = alt.Scale(domain=['Human','Lightning'], range=['#9D0400', '#FF9900'])
 
-causes_grouped = df[df['CAUSES'].isin(['Human', 'Lightning'])].groupby(['FIRE_YEAR', 'FIRE_SIZE_CLASS', 'state_descriptions', 'geographic_areas_desc', 'CAUSES']).size().reset_index(name='COUNT')
+color_scale = alt.Scale(domain=['Human','Lightning'], range=['#9D0400', '#FF9900'])
 def create_altair_chart2(data):
     title2 = alt.TitleParams(
         text='Regional Fire Patterns: Proportion of Fires',
         color='white', fontSize=16)
-    chart2 = alt.Chart(data, title=title2).mark_bar().encode(
-        alt.X('sum(COUNT)', stack='normalize', title='', axis=alt.Axis(labelColor='white')),
+
+    chart2 = alt.Chart(data[data['CAUSES'].isin(['Human', 'Lightning'])], title=title2).mark_bar().encode(
+        alt.X('count(CAUSES)', stack='normalize', title='', axis=alt.Axis(labelColor='white')),
         alt.Y('geographic_areas_desc:O', sort='y', title="", axis=alt.Axis(labelColor='white')),
         alt.Color('CAUSES', title="", scale=color_scale, legend=alt.Legend(orient='none',
             legendX=90, legendY=-20,
@@ -55,7 +54,7 @@ def create_altair_chart2(data):
             titleColor='white',
             labelColor='white')),
         tooltip=[
-            alt.Tooltip('sum(COUNT)', title='Fires', format=',d'),
+            alt.Tooltip('count(CAUSES)', title='Fires', format=',d'),
             alt.Tooltip('geographic_areas_desc:O', title='Area'),
             alt.Tooltip('CAUSES', title='Cause')
         ]
@@ -63,32 +62,31 @@ def create_altair_chart2(data):
     return chart2.to_dict(format="vega")
 
 ## -- Plot 3: "altair-chart-3" --
-# Group by FIRE_YEAR, STATE, and MONTH, calculate the count, and reset the index
-grouped_df = df[df['CAUSES'].isin(['Human', 'Lightning'])].groupby(['FIRE_YEAR', 'FIRE_SIZE_CLASS', 'state_descriptions', 'CAUSES', 'MONTH']).size().reset_index(name='COUNT')
+
 # Define the sort order
 sort_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 # Sorting dataframe by the desired order
-grouped_df['MONTH'] = pd.Categorical(grouped_df['MONTH'], categories=sort_order, ordered=True)
-grouped_df = grouped_df.sort_values(by='MONTH')
+df['MONTH'] = pd.Categorical(df['MONTH'], categories=sort_order, ordered=True)
+df.sort_values(by='MONTH', inplace=True)
 def create_altair_chart3(data):
     title3 = alt.TitleParams(
                 text='Comparing Monthly Fire Frequencies',
                 color='white', fontSize=16)
-    chart3_1 = alt.Chart(data, title=title3).mark_line().encode(
+    chart3_1 = alt.Chart(data[data['CAUSES'].isin(['Human', 'Lightning'])], title=title3).mark_line().encode(
     alt.X('MONTH:O', title=None, sort=sort_order, axis=alt.Axis(labelAngle=0, labelColor='white')),
-    alt.Y('average(COUNT)', title=None, axis=alt.Axis(labelColor='white')),
+    alt.Y('count(MONTH)', title=None, axis=alt.Axis(labelColor='white')),
     alt.Color('CAUSES:O', title= '', scale=color_scale, legend=alt.Legend(orient='none',
     legendX=120, legendY=-20, direction='horizontal', titleAnchor='middle', titleColor='white',
     labelColor='white'))
     ).properties(width=355, height=270
     )
-    chart3_2 = alt.Chart(data).mark_point().encode(
+    chart3_2 = alt.Chart(data[data['CAUSES'].isin(['Human', 'Lightning'])]).mark_point().encode(
     alt.X('MONTH:O', title=None, sort=sort_order),
-    alt.Y('average(COUNT)'),
+    alt.Y('count(MONTH)'),
     alt.Color('CAUSES:O', title='', scale=alt.Scale(scheme='darkred')),
     tooltip=[
     alt.Tooltip('MONTH:O', title='Month'),
-    alt.Tooltip('average(COUNT):Q', title='Mean', format='.2f'),
+    alt.Tooltip('count(MONTH):Q', title='Mean', format='.2f'),
     alt.Tooltip('CAUSES:O', title='Cause')]
     ).properties(width=355, height=270)
 
@@ -97,13 +95,13 @@ def create_altair_chart3(data):
 
 ## -- Plot 4: "altair-chart-4" --
 # Total acres burned
-causes_grouped2 = df[df['CAUSES'].isin(['Human', 'Lightning'])].groupby(['FIRE_YEAR', 'FIRE_SIZE_CLASS','state_descriptions', 'geographic_areas_desc', 'CAUSES'])['FIRE_SIZE'].sum().reset_index(name='SUM')
+#causes_grouped2 = df[df['CAUSES'].isin(['Human', 'Lightning'])].groupby(['FIRE_YEAR', 'FIRE_SIZE_CLASS','state_descriptions', 'geographic_areas_desc', 'CAUSES'])['FIRE_SIZE'].sum().reset_index(name='SUM')
 def create_altair_chart4(data):
     title4 = alt.TitleParams(
         text='Regional Fire Patterns: Proportion of Acres Burned',
         color='white', fontSize=16)
-    chart4 = alt.Chart(data, title=title4).mark_bar().encode(
-        alt.X('sum(SUM)', stack='normalize', title='', axis=alt.Axis(labelColor='white')),
+    chart4 = alt.Chart(data[data['CAUSES'].isin(['Human', 'Lightning'])], title=title4).mark_bar().encode(
+        alt.X('sum(FIRE_SIZE)', stack='normalize', title='', axis=alt.Axis(labelColor='white')),
         alt.Y('geographic_areas_desc:O', sort='y', title="", axis=alt.Axis(labelColor='white')),
         alt.Color('CAUSES', title="", scale=color_scale, legend=alt.Legend(orient='none',
             legendX=90, legendY=-20,
@@ -112,7 +110,7 @@ def create_altair_chart4(data):
             titleColor='white',
             labelColor='white')),
         tooltip=[
-            alt.Tooltip('sum(SUM)', title='Acres', format=',d'),
+            alt.Tooltip('sum(FIRE_SIZE)', title='Acres', format=',d'),
             alt.Tooltip('geographic_areas_desc:O', title='Area'),
             alt.Tooltip('CAUSES', title='Cause')
         ]
@@ -124,6 +122,7 @@ def create_altair_chart4(data):
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Filters
+fireSize = sorted([{'label': size, 'value': size} for size in df['FIRE_SIZE_CLASS'].unique()], key=lambda x: x['label'])
 all_dict = {"label": "All", "value": "All"}
 fireSize.insert(0, all_dict)
 default_fire_size = 'All'
@@ -197,7 +196,7 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-1",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart(wildfires_causes),
+                spec=create_altair_chart(df),
                 className="altair-chart-1"  # Adding class name
             ),
             html.Br(),
@@ -205,7 +204,7 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-3",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart2(causes_grouped),
+                spec=create_altair_chart2(df),
                 className="altair-chart-2"
             ),
         ], width=3),  # End of first column
@@ -215,7 +214,7 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-2",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart3(grouped_df),
+                spec=create_altair_chart3(df),
                 className="altair-chart-3"
             ),
             html.Br(),
@@ -223,7 +222,7 @@ layout = html.Div([
             dvc.Vega(
                 id="altair-chart-4",
                 opt={"renderer": "svg", "actions": False},
-                spec=create_altair_chart4(causes_grouped2),
+                spec=create_altair_chart4(df),
                 className="altair-chart-4"
             ),
         ],width=5)  # End of second column
@@ -246,32 +245,20 @@ layout = html.Div([
 )
 
 def update_altair_chart(year_range, selected_states, selected_sizes):
-    dff = wildfires_causes.copy()
-    dff2 = causes_grouped.copy()
-    dff3 = grouped_df.copy()
-    dff4 = causes_grouped2.copy()
+    dff = df.copy()
 
-    dff = wildfires_causes[(wildfires_causes['FIRE_YEAR'] >= year_range[0]) & (wildfires_causes['FIRE_YEAR'] <= year_range[1])]
-    dff2 = causes_grouped[(causes_grouped['FIRE_YEAR'] >= year_range[0]) & (causes_grouped['FIRE_YEAR'] <= year_range[1])]
-    dff3 = grouped_df[(grouped_df['FIRE_YEAR'] >= year_range[0]) & (grouped_df['FIRE_YEAR'] <= year_range[1])]
-    dff4 = causes_grouped2[(causes_grouped2['FIRE_YEAR'] >= year_range[0]) & (causes_grouped2['FIRE_YEAR'] <= year_range[1])]
+    dff = dff[(dff['FIRE_YEAR'] >= year_range[0]) & (dff['FIRE_YEAR'] <= year_range[1])]
 
     if 'All' not in selected_states:
         dff = dff[dff['state_descriptions'].isin(selected_states)]
-        dff2 = dff2[dff2['state_descriptions'].isin(selected_states)]
-        dff3 = dff3[dff3['state_descriptions'].isin(selected_states)]
-        dff4 = dff4[dff4['state_descriptions'].isin(selected_states)]
 
     if 'All' not in selected_sizes:
         dff = dff[dff['FIRE_SIZE_CLASS'].isin(selected_sizes)]
-        dff2 = dff2[dff2['FIRE_SIZE_CLASS'].isin(selected_sizes)]
-        dff3 = dff3[dff3['FIRE_SIZE_CLASS'].isin(selected_sizes)]
-        dff4 = dff4[dff4['FIRE_SIZE_CLASS'].isin(selected_sizes)]
 
     updated_chart1 = create_altair_chart(dff)
-    updated_chart2 = create_altair_chart2(dff2)
-    updated_chart3 = create_altair_chart3(dff3)
-    updated_chart4 = create_altair_chart4(dff4)
+    updated_chart2 = create_altair_chart2(dff)
+    updated_chart3 = create_altair_chart3(dff)
+    updated_chart4 = create_altair_chart4(dff)
     slider_output = dcc.Markdown(f'Selected years: {year_range[0]} - {year_range[1]}')
     return slider_output, updated_chart1, updated_chart2, updated_chart3, updated_chart4
 
