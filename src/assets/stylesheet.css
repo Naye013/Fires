@@ -20,6 +20,7 @@ color : white;
 
 /* CSS for heading text */
 .heading-text {
+    font-family: "Arial", sans-serif;
     text-align: center;
     font-weight: bold;
     font-size: 35px;
@@ -153,8 +154,6 @@ margin-top: 1%;
 .layoutbackground{
 background-color: #151515
 }
-
-
 
 .altair-chart-1 {
     height: 45%;
