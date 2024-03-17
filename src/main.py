@@ -5,7 +5,7 @@ import plotly.express as px
 
 px.defaults.template = "ggplot2"
 
-app = Dash(__name__, pages_folder='pages', use_pages=True)
+app = Dash(__name__, title='Historical Analysis of Wildfires in the United States', pages_folder='pages', use_pages=True)
 server = app.server
 
 app.layout = html.Div([
@@ -29,4 +29,4 @@ app.layout = html.Div([
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, timeout=600)
+    app.run_server(timeout=600)
